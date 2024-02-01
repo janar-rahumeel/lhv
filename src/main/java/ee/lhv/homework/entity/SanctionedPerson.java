@@ -18,6 +18,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.Immutable;
 
 @Table(name = "SANCTIONED_PERSON")
+@Setter
 @Getter
 @Entity
 @Builder
@@ -32,7 +33,6 @@ public class SanctionedPerson {
     @SequenceGenerator(name = "SEQ_SANCTIONED_PERSON", initialValue = 1000, allocationSize = 1)
     private Long id;
 
-    @Setter
     @Column(name = "FULL_NAME")
     @NotBlank
     private String fullName;

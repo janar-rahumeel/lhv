@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -18,9 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class SanctionedPersonServiceTest {
+
+    @Mock
+    private SanctionedPersonMatcherService sanctionedPersonMatcherService;
 
     @Mock
     private SanctionedPersonRepository sanctionedPersonRepository;
@@ -46,15 +51,25 @@ class SanctionedPersonServiceTest {
     @Test
     void testThatInsertIsSuccessful() {
         // given
-        doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(sanctionedPersonRepository).save(any(SanctionedPerson.class));
+        Long id = 4L;
+        String fullName = "Inserted Name";
 
-        SanctionedPersonData sanctionedPersonData = SanctionedPersonData.builder().fullName("Inserted Name").build();
+        doAnswer(invocationOnMock -> {
+            SanctionedPerson sanctionedPerson = invocationOnMock.getArgument(0);
+            sanctionedPerson.setId(id);
+            return sanctionedPerson;
+        }).when(sanctionedPersonRepository).save(any(SanctionedPerson.class));
+
+        given(sanctionedPersonMatcherService.map(fullName)).willReturn(mock(Pattern.class));
+
+        SanctionedPersonData sanctionedPersonData = SanctionedPersonData.builder().fullName(fullName).build();
 
         // when
         SanctionedPerson sanctionedPerson = sanctionedPersonService.insert(sanctionedPersonData);
 
         // then
-        assertThat(sanctionedPerson.getFullName(), is("Inserted Name"));
+        assertThat(sanctionedPerson.getFullName(), is(fullName));
+        assertThat(SanctionedPersonMatcherService.SANCTIONED_PERSON_PATTERNS.containsKey(id), is(true));
     }
 
     @Test
@@ -78,10 +93,15 @@ class SanctionedPersonServiceTest {
         // given
         Long id = 1L;
 
+        SanctionedPersonMatcherService.SANCTIONED_PERSON_PATTERNS.put(id, mock(Pattern.class));
+
         doAnswer(invocationOnMock -> null).when(sanctionedPersonRepository).deleteById(id);
 
         // when
         sanctionedPersonService.delete(id);
+
+        // then
+        assertThat(SanctionedPersonMatcherService.SANCTIONED_PERSON_PATTERNS.containsKey(id), is(false));
     }
 
 }
