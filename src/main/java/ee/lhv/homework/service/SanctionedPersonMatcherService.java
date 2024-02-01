@@ -31,7 +31,7 @@ public class SanctionedPersonMatcherService implements InitializingBean {
     }
 
     Pattern map(String fullName) {
-        String pattern = String.format("^.*%s.*$", Arrays.stream(fullName.split(" ")).map(nameFragment -> "(\\s?(" + nameFragment + ")\\s?){1}").collect(Collectors.joining()));
+        String pattern = String.format("^.*%s.*$", Arrays.stream(fullName.split(" ")).map(nameFragment -> "(?=.*" + nameFragment + ")").collect(Collectors.joining()));
         log.info("Pattern: " + pattern);
         return Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }

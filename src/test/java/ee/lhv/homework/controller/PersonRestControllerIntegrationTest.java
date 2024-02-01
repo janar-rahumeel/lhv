@@ -24,7 +24,7 @@ class PersonRestControllerIntegrationTest extends AbstractRestControllerIntegrat
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> httpEntity = new HttpEntity<>("{\"fullName\": \" Mr. sanctioned Personny\"}", httpHeaders);
+        HttpEntity<String> httpEntity = new HttpEntity<>("{\"fullName\": \" Mr. Personny sanctioned\"}", httpHeaders);
 
         // when
         ResponseEntity<SanctionedData> responseEntity = testRestTemplate
