@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SanctionedPersonService implements CrudSupport<SanctionedPerson, SanctionedPersonData, Long> {
 
+    private final SanctionedPersonMatcherService sanctionedPersonMatcherService;
     private final SanctionedPersonRepository sanctionedPersonRepository;
 
     @Override
@@ -20,20 +21,29 @@ public class SanctionedPersonService implements CrudSupport<SanctionedPerson, Sa
 
     @Override
     public SanctionedPerson insert(SanctionedPersonData newSanctionedPersonData) {
-        SanctionedPerson sanctionedPerson = SanctionedPerson.builder().fullName(newSanctionedPersonData.getFullName()).build();
-        return sanctionedPersonRepository.save(sanctionedPerson);
+        SanctionedPerson newSanctionedPerson = SanctionedPerson.builder().fullName(newSanctionedPersonData.getFullName()).build();
+        SanctionedPerson sanctionedPerson = sanctionedPersonRepository.save(newSanctionedPerson);
+        updatePattern(sanctionedPerson);
+        return sanctionedPerson;
     }
 
     @Override
     public SanctionedPerson update(Long id, SanctionedPersonData updatedSanctionedPersonData) {
-        SanctionedPerson sanctionedPerson = get(updatedSanctionedPersonData.getId());
-        sanctionedPerson.setFullName(updatedSanctionedPersonData.getFullName());
-        return sanctionedPersonRepository.save(sanctionedPerson);
+        SanctionedPerson updatedSanctionedPerson = get(updatedSanctionedPersonData.getId());
+        updatedSanctionedPerson.setFullName(updatedSanctionedPersonData.getFullName());
+        SanctionedPerson sanctionedPerson = sanctionedPersonRepository.save(updatedSanctionedPerson);
+        updatePattern(sanctionedPerson);
+        return sanctionedPerson;
+    }
+
+    private void updatePattern(SanctionedPerson sanctionedPerson) {
+        SanctionedPersonMatcherService.SANCTIONED_PERSON_PATTERNS.put(sanctionedPerson.getId(), sanctionedPersonMatcherService.map(sanctionedPerson.getFullName()));
     }
 
     @Override
     public void delete(Long id) {
         sanctionedPersonRepository.deleteById(id);
+        SanctionedPersonMatcherService.SANCTIONED_PERSON_PATTERNS.remove(id);
     }
 
 }

@@ -21,7 +21,7 @@ class SanctionedPersonServiceJpaTest extends AbstractJpaTest {
 
     @BeforeEach
     void beforeEach() {
-        sanctionedPersonService = new SanctionedPersonService(sanctionedPersonRepository);
+        sanctionedPersonService = new SanctionedPersonService(null, sanctionedPersonRepository);
     }
 
     @Sql("/sql/SanctionedPersonServiceJpaTest/testThatGetIsSuccessful.sql")

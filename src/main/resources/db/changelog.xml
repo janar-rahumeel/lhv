@@ -14,7 +14,7 @@
     <changeSet id="[LHV-1] Add SANCTIONED_PERSON table" author="janar.rahumeel">
         <createSequence sequenceName="SEQ_SANCTIONED_PERSON" startValue="1000" incrementBy="1"/>
         <createTable tableName="SANCTIONED_PERSON">
-            <column name="ID" type="BIGINT" defaultValueSequenceNext="SEQ_SANCTIONED_PEOPLE">
+            <column name="ID" type="BIGINT" defaultValueSequenceNext="SEQ_SANCTIONED_PERSON">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="FULL_NAME" type="VARCHAR2(100)">
@@ -25,7 +25,14 @@
             </column>
             <column name="MODIFIED_AT" type="TIMESTAMP"/>
         </createTable>
-        <addUniqueConstraint tableName="SANCTIONED_PERSON" columnNames="FULL_NAME" constraintName="UK_SANCTIONED_PERSON"/>
+        <addUniqueConstraint tableName="SANCTIONED_PERSON" columnNames="FULL_NAME"
+                             constraintName="UK_SANCTIONED_PERSON"/>
+    </changeSet>
+
+    <changeSet id="[LHV-1] Insert data into SANCTIONED_PERSON table" author="janar.rahumeel">
+        <insert tableName="SANCTIONED_PERSON">
+            <column name="FULL_NAME" value="Sanctioned Personny"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>
