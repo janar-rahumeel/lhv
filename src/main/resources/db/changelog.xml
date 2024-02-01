@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="[LHV-1] Set H2 mode" author="janar.rahumeel" dbms="h2" runAlways="true">
+        <sql>
+            SET MODE PostgreSQL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="[LHV-1] Add SANCTIONED_PERSON table" author="janar.rahumeel">
+        <createSequence sequenceName="SEQ_SANCTIONED_PERSON" startValue="1000" incrementBy="1"/>
+        <createTable tableName="SANCTIONED_PERSON">
+            <column name="ID" type="BIGINT" defaultValueSequenceNext="SEQ_SANCTIONED_PEOPLE">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="FULL_NAME" type="VARCHAR2(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_AT" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MODIFIED_AT" type="TIMESTAMP"/>
+        </createTable>
+        <addUniqueConstraint tableName="SANCTIONED_PERSON" columnNames="FULL_NAME" constraintName="UK_SANCTIONED_PERSON"/>
+    </changeSet>
+
+</databaseChangeLog>
