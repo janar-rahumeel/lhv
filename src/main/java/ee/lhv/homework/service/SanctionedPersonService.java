@@ -37,13 +37,13 @@ public class SanctionedPersonService implements CrudSupport<SanctionedPerson, Sa
     }
 
     private void updatePattern(SanctionedPerson sanctionedPerson) {
-        SanctionedPersonMatcherService.SANCTIONED_PERSON_PATTERNS.put(sanctionedPerson.getId(), sanctionedPersonMatcherService.map(sanctionedPerson.getFullName()));
+        SanctionedPersonMatcherService.SANCTIONED_PERSON_LOWER_CASE_NAMES.put(sanctionedPerson.getId(), sanctionedPersonMatcherService.map(sanctionedPerson.getFullName()));
     }
 
     @Override
     public void delete(Long id) {
         sanctionedPersonRepository.deleteById(id);
-        SanctionedPersonMatcherService.SANCTIONED_PERSON_PATTERNS.remove(id);
+        SanctionedPersonMatcherService.SANCTIONED_PERSON_LOWER_CASE_NAMES.remove(id);
     }
 
 }
